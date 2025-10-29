@@ -10,4 +10,6 @@ public interface IPlayerService {
     Player findById(int id);
 
     void deleteById(int id);
+
+    boolean add(Player player);
 }

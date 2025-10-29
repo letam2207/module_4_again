@@ -4,10 +4,7 @@ import com.example.demo.entity.Player;
 import com.example.demo.service.IPlayerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -53,4 +50,19 @@ public class PlayerController {
         redirectAttributes.addFlashAttribute("mess", "Xoá cầu thủ thành công!");
         return "redirect:/players";
     }
+
+    @GetMapping("/add")
+    public String showFormAdd(Model model) {
+        model.addAttribute("player", new Player());
+        return "player/add";
+    }
+
+    @PostMapping("/add")
+    public String save(@ModelAttribute Player player,
+                       RedirectAttributes redirectAttributes) {
+        iPlayerService.add(player);
+        redirectAttributes.addFlashAttribute("mess", "Thêm mới cầu thủ thành công!");
+        return "redirect:/players";
+    }
+
 }

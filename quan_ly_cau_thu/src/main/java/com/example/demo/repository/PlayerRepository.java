@@ -63,4 +63,9 @@ public class PlayerRepository implements IPlayerRepository {
             }
         }
     }
+
+    @Override
+    public boolean add(Player player) {
+        return playerList.add(player);
+    }
 }
