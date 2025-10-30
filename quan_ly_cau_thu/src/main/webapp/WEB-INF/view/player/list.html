@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách cầu thủ</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+        }
+        a {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Danh sách cầu thủ</h1>
+
+<h4 style="color: red; text-align:center" th:text="${mess}"></h4>
+<a href="/players/add">➕ Thêm mới</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Ngày sinh</th>
+        <th>Kinh nghiệm</th>
+        <th>Vị trí</th>
+        <th>Ảnh đại diện</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="player, status : ${playerList}">
+        <td th:text="${status.count}"></td>
+        <td th:text="${player.id}"></td>
+        <td th:text="${player.name}"></td>
+
+        <!-- ✅ Hiển thị ngày sinh có định dạng -->
+        <td th:text="${#temporals.format(player.dob, 'dd/MM/yyyy')}"></td>
+
+        <td th:text="${player.experience}"></td>
+        <td th:text="${player.position}"></td>
+
+        <!-- ✅ Hiển thị ảnh đại diện nếu có -->
+        <td>
+            <img th:src="${player.avatar}" alt="Avatar" th:if="${player.avatar != null}">
+            <span th:if="${player.avatar == null}">Không có ảnh</span>
+        </td>
+
+        <!-- ✅ Nút hành động -->
+        <td>
+            <a th:href="@{'/players/edit/' + ${player.id}}">Sửa</a> |
+            <a th:href="@{'/players/delete/' + ${player.id}}"
+               onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

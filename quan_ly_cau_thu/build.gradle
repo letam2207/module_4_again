@@ -30,6 +30,12 @@ dependencies {
     implementation 'org.springframework:spring-context:5.3.30'
     implementation 'org.springframework:spring-beans:5.3.30'
 
+    // Spring MVC
+    implementation "org.springframework:spring-webmvc:6.2.10"
+
+    // Thymeleaf 6 + Spring integration
+    implementation "org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE"
+    implementation "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE"
 
     compileOnly 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
     implementation 'javax.servlet:jstl:1.2'
