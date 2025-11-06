@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách cầu thủ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    a {
+      text-decoration: none;
+      color: white;
+      background-color: #3498db;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
+    a:hover {
+      background-color: #2980b9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #34495e;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .message {
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<h1>Danh sách cầu thủ</h1>
+
+<h3 class="message" th:text="${mess}"></h3>
+
+<div style="text-align: center; margin-bottom: 10px;">
+  <a href="/players/add"> Thêm cầu thủ mới</a>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>STT</th>
+    <th>ID</th>
+    <th>Tên cầu thủ</th>
+    <th>Ngày sinh</th>
+    <th>Kinh nghiệm</th>
+    <th>Vị trí</th>
+    <th>Ảnh đại diện</th>
+    <th>Hành động</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="player, status : ${playerList}">
+    <td th:text="${status.count}"></td>
+    <td th:text="${player.id}"></td>
+    <td th:text="${player.name}"></td>
+    <td th:text="${#temporals.format(player.dob, 'dd/MM/yyyy')}"></td>
+    <td th:text="${player.experience}"></td>
+    <td th:text="${player.position}"></td>
+    <td>
+      <img th:src="${player.avatar}" alt="avatar">
+    </td>
+    <td>
+      <a th:href="@{'/players/detail/' + ${player.id}}">Chi tiết</a> |
+      <form th:action="@{'/players/delete/' + ${player.id}}" method="post" style="display:inline;">
+        <button type="submit"
+                onclick="return confirm('Bạn có chắc muốn xoá cầu thủ này?')">Xoá</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

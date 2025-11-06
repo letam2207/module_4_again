@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm cầu thủ mới</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            padding-top: 40px;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.3);
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+            color: #c62828;
+            font-weight: bold;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        h1::after {
+            content: "★";
+            color: gold;
+            font-size: 28px;
+            position: absolute;
+            right: 50%;
+            transform: translateX(50%);
+            top: 45px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #c62828;
+        }
+
+        .btn-primary {
+            background-color: #c62828;
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #b71c1c;
+            color: gold;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .preview {
+            display: block;
+            margin: 15px auto;
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #c62828;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: gold;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link a:hover {
+            color: #ffeb3b;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="col-md-8 mx-auto">
+        <div class="card p-4">
+            <h1>Thêm cầu thủ mới</h1>
+
+            <form th:action="@{/players/save}" th:object="${playerDto}" method="post" enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên cầu thủ:</label>
+                    <input type="text" th:field="*{name}" id="name" class="form-control" placeholder="Nhập tên cầu thủ">
+                    <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dob" class="form-label">Ngày sinh:</label>
+                    <input type="date" th:field="*{dob}" id="dob" class="form-control">
+                    <div class="error" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></div>
+                    <div class="error" th:if="${ageError}" th:text="${ageError}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="experience" class="form-label">Kinh nghiệm (năm):</label>
+                    <input type="number" th:field="*{experience}" id="experience" class="form-control" min="0" placeholder="Nhập số năm kinh nghiệm">
+                    <div class="error" th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="position" class="form-label">Vị trí:</label>
+                    <select th:field="*{position}" id="position" class="form-select">
+                        <option value="">-- Chọn vị trí thi đấu --</option>
+                        <option value="trung vệ">Trung vệ</option>
+                        <option value="hậu vệ">Hậu vệ</option>
+                        <option value="tiền vệ">Tiền vệ</option>
+                        <option value="tiền đạo">Tiền đạo</option>
+                        <option value="thủ môn">Thủ môn</option>
+                    </select>
+                    <div class="error" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="teamId" class="form-label">Đội bóng:</label>
+                    <select th:field="*{teamId}" id="teamId" class="form-select">
+                        <option value="">-- Chọn đội bóng --</option>
+                        <option th:each="t : ${teams}" th:value="${t.id}" th:text="${t.name}"></option>
+                    </select>
+                    <div class="error" th:if="${#fields.hasErrors('teamId')}" th:errors="*{teamId}"></div>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <label for="avatarFile" class="form-label d-block">Ảnh đại diện:</label>
+                    <input type="file" name="avatarFile" id="avatarFile" class="form-control" accept="image/*" onchange="previewImage(event)">
+                    <img id="avatarPreview" class="preview" src="#" alt="Ảnh xem trước" style="display:none;">
+                    <div class="error" th:if="${uploadError}" th:text="${uploadError}"></div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary px-4">Lưu cầu thủ</button>
+                </div>
+            </form>
+
+            <div class="back-link">
+                <a th:href="@{/players}">⬅ Quay lại danh sách cầu thủ</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('avatarPreview');
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
