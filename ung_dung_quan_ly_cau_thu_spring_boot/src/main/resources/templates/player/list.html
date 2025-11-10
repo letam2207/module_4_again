@@ -202,7 +202,6 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-title fw-bold text-danger mb-0" th:text="${player.name}">Tên cầu thủ</h5>
-            <!-- ❤️ Nút yêu thích -->
             <button type="button" class="favorite-btn" th:onclick="'addToFavorites(' + ${player.id} + ')'">
               <i class="bi bi-heart"></i>
             </button>
