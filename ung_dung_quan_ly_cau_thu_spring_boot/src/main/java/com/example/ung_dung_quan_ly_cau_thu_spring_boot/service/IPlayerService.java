@@ -20,4 +20,8 @@ public interface IPlayerService {
 
 
     void delete(int id);
+
+    long countByStatus(String status);
+
+    Player togglePlayerStatus(Integer id);
 }

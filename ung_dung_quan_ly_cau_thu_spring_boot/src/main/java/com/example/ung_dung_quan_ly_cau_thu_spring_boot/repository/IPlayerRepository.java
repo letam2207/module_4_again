@@ -9,6 +9,8 @@ import java.time.LocalDate;
 
 
 public interface IPlayerRepository extends JpaRepository<Player,Integer> {
+    long countByStatus(String status);
+
     Page<Player> findAllByNameContaining(String searchName, Pageable pageable);
 
     Page<Player> findAllByNameContainingIgnoreCaseAndDobBetween(String name, LocalDate startDate, LocalDate endDate, Pageable pageable);

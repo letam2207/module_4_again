@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <title>Danh sách cầu thủ Việt Nam</title>
 
-  <!-- Bootstrap 5 CDN -->
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
     body {
@@ -21,7 +23,7 @@
       background: rgba(255, 255, 255, 0.95);
       border-radius: 10px;
       padding: 30px;
-      margin-top: 50px;
+      margin-top: 40px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
@@ -43,39 +45,6 @@
       top: 45px;
     }
 
-    .btn-custom {
-      background-color: #c62828;
-      border: none;
-      color: #fff;
-    }
-    .btn-custom:hover {
-      background-color: #b71c1c;
-      color: gold;
-    }
-
-    table {
-      background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    thead {
-      background-color: #c62828;
-      color: gold;
-      font-weight: 600;
-    }
-
-    tbody tr:hover {
-      background-color: rgba(255, 235, 59, 0.2);
-    }
-
-    img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
     .message {
       text-align: center;
       font-weight: bold;
@@ -86,19 +55,91 @@
       border-radius: 5px;
     }
 
-    .pagination a {
-      color: #c62828;
+    .player-card {
+      border: 2px solid #c62828;
+      border-radius: 12px;
+      transition: 0.3s;
+      background-color: #fff;
+      color: #333;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      overflow: hidden;
     }
 
-    .pagination a:hover {
-      color: gold;
+    .player-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+    .player-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: 0.3s;
+    }
+
+    .player-img:hover {
+      filter: brightness(0.8);
+      cursor: pointer;
+    }
+
+    .badge-status {
+      font-size: 0.9rem;
+      padding: 5px 10px;
+      border-radius: 10px;
     }
 
     footer {
       text-align: center;
       color: #ffeb3b;
-      margin-top: 30px;
+      margin-top: 40px;
       font-weight: 500;
+    }
+
+    .text-dark span {
+      color: #000 !important;
+    }
+
+    .favorite-btn {
+      background: none;
+      border: none;
+      color: #c62828;
+      font-size: 1.3rem;
+      transition: 0.3s;
+    }
+
+    .favorite-btn:hover {
+      color: gold;
+      transform: scale(1.2);
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      border: none;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .btn-edit:hover {
+      background-color: #ffb300;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background-color: #d32f2f;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .btn-delete:hover {
+      background-color: #b71c1c;
+    }
+
+    .top-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -107,10 +148,16 @@
 <div class="container">
   <h1>Danh sách cầu thủ Việt Nam</h1>
 
-  <!-- Form tìm kiếm -->
+  <!-- Nút trên đầu -->
+  <div class="top-buttons">
+    <a th:href="@{/players/save}" class="btn btn-success fw-bold">+ Thêm cầu thủ mới</a>
+    <a th:href="@{/players/favorites}" class="btn btn-outline-warning fw-bold">
+      <i class="bi bi-heart-fill text-danger"></i> Xem danh sách yêu thích
+    </a>
+  </div>
+
   <!-- Form tìm kiếm -->
   <form th:action="@{/players}" method="get" class="row g-3 align-items-end justify-content-center mb-4">
-
     <div class="col-md-3">
       <label class="form-label text-dark fw-bold">Tìm theo tên:</label>
       <input type="text" name="searchName" th:value="${searchName}" class="form-control"
@@ -137,71 +184,64 @@
     </div>
   </form>
 
-
-  <div class="text-center mb-3">
-    <a th:href="@{/players/save}" class="btn btn-success fw-bold">+ Thêm cầu thủ mới</a>
-  </div>
-
   <div th:if="${mess}" class="message mb-3" th:text="${mess}"></div>
 
-  <!-- Bảng danh sách -->
-  <div class="table-responsive">
-    <table class="table table-striped align-middle text-center">
-      <thead>
-      <tr>
-        <th>STT</th>
-        <th>ID</th>
-        <th>Tên cầu thủ</th>
-        <th>Ngày sinh</th>
-        <th>Kinh nghiệm</th>
-        <th>Vị trí</th>
-        <th>Đội bóng</th>
-        <th>Ảnh đại diện</th>
-        <th>Hành động</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="player, status : ${playerPage}">
-        <td th:text="${status.count + playerPage.number * playerPage.size}"></td>
-        <td th:text="${player.id}"></td>
-        <td th:text="${player.name}"></td>
-        <td th:text="${#temporals.format(player.dob, 'dd/MM/yyyy')}"></td>
-        <td th:text="${player.experience}"></td>
-        <td th:text="${player.position}"></td>
-        <td th:text="${player.team != null ? player.team.name : 'Chưa có'}"></td>
-        <td>
-          <img th:src="${player.avatar != null ? player.avatar : '/images/default-avatar.png'}" alt="avatar">
-        </td>
-        <td>
-          <a th:href="@{'/players/detail/' + ${player.id}}" class="btn btn-outline-primary btn-sm">Chi tiết</a>
-          <a th:href="@{'/players/edit/' + ${player.id}}" class="btn btn-outline-warning btn-sm">Sửa</a>
-          <form th:action="@{'/players/delete/' + ${player.id}}" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-outline-danger btn-sm"
-                    onclick="return confirm('Bạn có chắc muốn xoá cầu thủ này?')">Xoá</button>
-          </form>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="mb-3 text-dark fw-bold">
+    <strong>Số lượng đăng ký đá:</strong>
+    <span th:text="${registeredCount}" style="color: black;">0</span>/11
+  </div>
+
+  <!-- Card danh sách cầu thủ -->
+  <div class="row g-4">
+    <div class="col-md-4 col-lg-3" th:each="player : ${playerPage}">
+      <div class="card player-card">
+        <a th:href="@{'/players/detail/' + ${player.id}}">
+          <img th:src="${player.avatar != null ? player.avatar : '/images/default-avatar.png'}"
+               class="player-img" alt="Avatar">
+        </a>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title fw-bold text-danger mb-0" th:text="${player.name}">Tên cầu thủ</h5>
+            <!-- ❤️ Nút yêu thích -->
+            <button type="button" class="favorite-btn" th:onclick="'addToFavorites(' + ${player.id} + ')'">
+              <i class="bi bi-heart"></i>
+            </button>
+          </div>
+
+          <p class="card-text mb-1"><strong>Ngày sinh:</strong> <span th:text="${#temporals.format(player.dob, 'dd/MM/yyyy')}"></span></p>
+          <p class="card-text mb-1"><strong>Vị trí:</strong> <span th:text="${player.position}"></span></p>
+          <p class="card-text mb-1"><strong>Kinh nghiệm:</strong> <span th:text="${player.experience}"></span></p>
+          <p class="card-text mb-1"><strong>Đội bóng:</strong> <span th:text="${player.team != null ? player.team.name : 'Chưa có'}"></span></p>
+
+          <p>
+            <span class="badge badge-status"
+                  th:classappend="${player.status == 'Đã đăng ký'} ? 'bg-success' : 'bg-secondary'"
+                  th:text="${player.status}"></span>
+          </p>
+
+          <div class="d-flex justify-content-between mt-3">
+            <a th:href="@{'/players/edit/' + ${player.id}}" class="btn btn-edit btn-sm w-50 me-1">Sửa</a>
+            <form th:action="@{'/players/delete/' + ${player.id}}" method="post" class="w-50">
+              <button type="submit" class="btn btn-delete btn-sm w-100"
+                      onclick="return confirm('Bạn có chắc muốn xoá cầu thủ này?')">Xoá</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Phân trang -->
-  <nav class="pagination justify-content-center">
+  <nav class="pagination justify-content-center mt-4">
     <ul class="pagination">
       <li class="page-item" th:if="${playerPage.hasPrevious()}">
-        <a class="page-link" th:href="@{/players(page=${playerPage.number - 1}, size=${size}, searchName=${searchName}, startDate=${startDate}, endDate=${endDate})}">
-          ⬅ Trước
-        </a>
+        <a class="page-link" th:href="@{/players(page=${playerPage.number - 1}, size=${size}, searchName=${searchName}, startDate=${startDate}, endDate=${endDate})}">⬅ Trước</a>
       </li>
       <li class="page-item disabled">
-        <a class="page-link text-dark bg-light fw-bold">
-          Trang [[${playerPage.number + 1}]] / [[${playerPage.totalPages}]]
-        </a>
+        <a class="page-link text-dark bg-light fw-bold">Trang [[${playerPage.number + 1}]] / [[${playerPage.totalPages}]]</a>
       </li>
       <li class="page-item" th:if="${playerPage.hasNext()}">
-        <a class="page-link" th:href="@{/players(page=${playerPage.number + 1}, size=${size}, searchName=${searchName}, startDate=${startDate}, endDate=${endDate})}">
-          Sau ➡
-        </a>
+        <a class="page-link" th:href="@{/players(page=${playerPage.number + 1}, size=${size}, searchName=${searchName}, startDate=${startDate}, endDate=${endDate})}">Sau ➡</a>
       </li>
     </ul>
   </nav>
@@ -212,5 +252,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
 </body>
 </html>

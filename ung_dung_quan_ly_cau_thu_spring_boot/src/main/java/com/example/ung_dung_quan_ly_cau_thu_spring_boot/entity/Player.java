@@ -24,6 +24,7 @@ public class Player {
     private String experience;
     private String position;
     private String avatar;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "id_team", referencedColumnName = "id")

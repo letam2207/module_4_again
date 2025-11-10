@@ -6,10 +6,12 @@ import com.example.ung_dung_quan_ly_cau_thu_spring_boot.entity.Team;
 import com.example.ung_dung_quan_ly_cau_thu_spring_boot.service.CloudinaryService;
 import com.example.ung_dung_quan_ly_cau_thu_spring_boot.service.IPlayerService;
 import com.example.ung_dung_quan_ly_cau_thu_spring_boot.service.ITeamService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -20,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/players")
@@ -55,14 +59,23 @@ public class PlayerController {
         } else {
             playerPage = iPlayerService.findAllByNameContaining(searchName, pageable);
         }
+        long registeredCount = iPlayerService.countByStatus("Đăng ký đá");
 
         model.addAttribute("playerPage", playerPage);
+        model.addAttribute("registeredCount", registeredCount);
         model.addAttribute("searchName", searchName);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         model.addAttribute("size", size);
 
         return "player/list";
+    }
+
+
+    @PostMapping("/toggle/{id}")
+    public String toggleStatus(@PathVariable("id") Integer id) {
+        iPlayerService.togglePlayerStatus(id);
+        return "redirect:/players";
     }
 
     @GetMapping("/detail/{id}")
@@ -185,6 +198,21 @@ public class PlayerController {
         iPlayerService.save(existingPlayer);
         redirectAttributes.addFlashAttribute("mess", "Cập nhật cầu thủ thành công!");
         return "redirect:/players";
+    }
+
+    @PostMapping("/add-to-favorites/{id}")
+    public ResponseEntity<Void> addToFavorites(@PathVariable Long id, HttpSession session) {
+        List<Long> favorites = (List<Long>) session.getAttribute("favorites");
+        if (favorites == null) {
+            favorites = new ArrayList<>();
+        }
+
+        if (!favorites.contains(id)) {
+            favorites.add(id);
+            session.setAttribute("favorites", favorites);
+        }
+
+        return ResponseEntity.ok().build();
     }
 
 }
