@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+    <th:block th:replace="~{common/template::library}"></th:block>
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary mb-0">Chi tiết sản phẩm</h2>
+        <div>
+            <a th:href="@{/product}" class="btn btn-secondary">Quay lại danh sách</a>
+            <a th:href="@{|/product/update/${product.id}|}" class="btn btn-warning">Sửa</a>
+            <a th:href="@{|/product/delete/${product.id}|}" class="btn btn-danger"
+               onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</a>
+            <!-- Nếu muốn dùng modal xóa giống list.html, có thể copy modal và button ở đó sang -->
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9" th:text="${product.id}"></dd>
+
+                <dt class="col-sm-3">Tên sản phẩm</dt>
+                <dd class="col-sm-9" th:text="${product.name}"></dd>
+
+                <dt class="col-sm-3">Giá</dt>
+                <dd class="col-sm-9" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')}"></dd>
+
+                <dt class="col-sm-3">Ngày sản xuất</dt>
+                <dd class="col-sm-9" th:text="${#temporals.format(product.productionDate, 'dd-MM-yyyy')}"></dd>
+
+                <dt class="col-sm-3">Mô tả</dt>
+                <dd class="col-sm-9" th:text="${product.describe} ?: '—'"></dd>
+
+                <dt class="col-sm-3">Hãng sản xuất</dt>
+                <dd class="col-sm-9" th:text="${product.manufacturer}"></dd>
+
+                <dt class="col-sm-3">Loại sản phẩm</dt>
+                <dd class="col-sm-9" th:text="${product.productType != null ? product.productType.nameType : '—'}"></dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

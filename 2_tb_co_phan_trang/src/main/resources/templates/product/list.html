@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+    <th:block th:replace="~{common/template::library}"></th:block>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-3 text-primary">📦 Danh sách sản phẩm</h2>
+
+    <form th:action="@{/product}" method="get" class="row g-2 mb-3">
+        <div class="col-md-6">
+            <input type="text" name="name" th:value="${search}" class="form-control"
+                   placeholder="Nhập tên sản phẩm cần tìm...">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+        </div>
+        <div class="col-md-4 text-end">
+            <a th:href="@{/product/create}" class="btn btn-success">+ Thêm mới</a>
+        </div>
+    </form>
+
+    <p id="message" class="text-success fw-bold text-center" th:text="${message}"></p>
+
+    <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Ngày sản xuất</th>
+            <th>Mô tả</th>
+            <th>Hãng</th>
+            <th>Loại sản phẩm</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${productPage.content}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')}"></td>
+            <td th:text="${#temporals.format(product.productionDate, 'dd-MM-yyyy')}"></td>
+            <td th:text="${product.describe}"></td>
+            <td th:text="${product.manufacturer}"></td>
+            <td th:text="${product.productType != null ? product.productType.nameType : 'N/A'}"></td>
+            <td>
+                <a th:href="@{|/product/${product.id}|}" class="btn btn-info btn-sm">Chi tiết</a>
+                <a th:href="@{|/product/update/${product.id}|}" class="btn btn-warning btn-sm">Sửa</a>
+                <button type="button" class="btn btn-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#confirmDeleteModal"
+                        th:attr="data-id=${product.id}, data-name=${product.name}">
+                    Xóa
+                </button>
+            </td>
+        </tr>
+
+        <tr th:if="${productPage.totalElements == 0}">
+            <td colspan="8" class="text-muted">Không tìm thấy sản phẩm nào</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center mt-3" th:if="${productPage.totalPages > 0}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${!productPage.hasPrevious()} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/product(page=${productPage.number - 1}, name=${search})}">
+                        &laquo; Trước
+                    </a>
+                </li>
+
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                    th:classappend="${productPage.number == i} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/product(page=${i}, name=${search})}"
+                       th:text="${i + 1}">
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!productPage.hasNext()} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/product(page=${productPage.number + 1}, name=${search})}">
+                        Sau &raquo;
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmDeleteLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc muốn xóa sản phẩm <strong id="deleteItemName"></strong> (ID: <span id="deleteItemId"></span>)?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <a id="confirmDeleteBtn" class="btn btn-danger">Xóa</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const deleteModal = document.getElementById('confirmDeleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        document.getElementById('deleteItemName').textContent = name;
+        document.getElementById('deleteItemId').textContent = id;
+        document.getElementById('confirmDeleteBtn').setAttribute('href', `/product/delete/${id}`);
+    });
+
+    setTimeout(() => {
+        const m = document.getElementById("message");
+        if (m) m.style.display = "none";
+    }, 3000);
+</script>
+
+</body>
+</html>

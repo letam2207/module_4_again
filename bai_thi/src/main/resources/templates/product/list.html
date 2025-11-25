@@ -1,0 +1,118 @@
+<!--<!doctype html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--    <title>Danh sách sản phẩm</title>-->
+<!--    <th:block th:replace="~{common/template::library}"></th:block>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="container mt-4">-->
+<!--    <h2 class="mb-3">Danh sách sản phẩm</h2>-->
+
+<!--    &lt;!&ndash; Form tìm kiếm &ndash;&gt;-->
+<!--    <form th:action="@{/product/search}" method="get" class="row g-2 mb-3">-->
+<!--        <div class="col-md-6">-->
+<!--            <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm..."-->
+<!--                   th:value="${search}">-->
+<!--        </div>-->
+<!--        <div class="col-md-2">-->
+<!--            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>-->
+<!--        </div>-->
+<!--        <div class="col-md-4 text-end">-->
+<!--            <a th:href="@{/product/create}" class="btn btn-success">Thêm mới</a>-->
+<!--        </div>-->
+<!--    </form>-->
+
+<!--    &lt;!&ndash; Bảng danh sách sản phẩm &ndash;&gt;-->
+<!--    <table class="table table-bordered table-hover align-middle text-center">-->
+<!--        <thead class="table-dark">-->
+<!--        <tr>-->
+<!--            <th>ID</th>-->
+<!--            <th>Tên sản phẩm</th>-->
+<!--            <th>Giá sản phẩm (VNĐ)</th>-->
+<!--            <th>Mô tả sản phẩm</th>-->
+<!--            <th>Hãng sản xuất</th>-->
+<!--            <th>Hành động</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="product : ${products}">-->
+<!--            <td th:text="${product.id}"></td>-->
+<!--            <td th:text="${product.name}"></td>-->
+<!--            <td th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')}"></td>-->
+<!--            <td th:text="${product.describe}"></td>-->
+<!--            <td th:text="${product.manufacturer}"></td>-->
+<!--            <td>-->
+<!--                <a th:href="@{|/product/${product.id}|}" class="btn btn-info btn-sm">Chi tiết</a>-->
+<!--                <a th:href="@{|/product/update/${product.id}|}" class="btn btn-warning btn-sm">Sửa</a>-->
+
+<!--                &lt;!&ndash; Nút mở modal xác nhận xóa &ndash;&gt;-->
+<!--                <button type="button"-->
+<!--                        class="btn btn-danger btn-sm"-->
+<!--                        data-bs-toggle="modal"-->
+<!--                        data-bs-target="#confirmDeleteModal"-->
+<!--                        th:attr="data-id=${product.id}, data-name=${product.name}">-->
+<!--                    Xóa-->
+<!--                </button>-->
+<!--            </td>-->
+<!--        </tr>-->
+
+<!--        <tr th:if="${#lists.isEmpty(products)}">-->
+<!--            <td colspan="6" class="text-muted">Không có sản phẩm nào</td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    &lt;!&ndash; Hiển thị thông báo &ndash;&gt;-->
+<!--    <p id="message" th:text="${message}"></p>-->
+
+<!--</div>-->
+
+<!--&lt;!&ndash; Modal xác nhận xóa &ndash;&gt;-->
+<!--<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header bg-danger text-white">-->
+<!--                <h5 class="modal-title" id="confirmDeleteLabel">Xác nhận xóa</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                Bạn có chắc muốn xóa sản phẩm:-->
+<!--                <strong id="deleteItemName"></strong>-->
+<!--                (ID: <span id="deleteItemId"></span>)?-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>-->
+<!--                <a id="confirmDeleteBtn" class="btn btn-danger">Xóa</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Script xử lý modal &ndash;&gt;-->
+<!--<script>-->
+<!--    const deleteModal = document.getElementById('confirmDeleteModal');-->
+<!--    deleteModal.addEventListener('show.bs.modal', function (event) {-->
+<!--        const button = event.relatedTarget;-->
+<!--        const id = button.getAttribute('data-id');-->
+<!--        const name = button.getAttribute('data-name');-->
+
+<!--        document.getElementById('deleteItemName').textContent = name;-->
+<!--        document.getElementById('deleteItemId').textContent = id;-->
+
+<!--        // Gán link xóa động-->
+<!--        const deleteLink = document.getElementById('confirmDeleteBtn');-->
+<!--        deleteLink.setAttribute('href', `/product/delete/${id}`);-->
+<!--    });-->
+
+<!--    // Ẩn message sau 3s-->
+<!--    setTimeout(function () {-->
+<!--        const m = document.getElementById("message");-->
+<!--        if (m) m.style.display = "none";-->
+<!--    }, 3000);-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->

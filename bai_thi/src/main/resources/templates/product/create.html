@@ -1,0 +1,55 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="utf-8">-->
+<!--    <title>Thêm sản phẩm</title>-->
+<!--    <th:block th:replace="~{common/template::library}"></th:block>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="container mt-4">-->
+<!--    <div class="card shadow p-4">-->
+<!--        <h2 class="mb-3 text-success text-center">Thêm sản phẩm mới</h2>-->
+
+<!--        &lt;!&ndash; Form sử dụng ProductDto &ndash;&gt;-->
+<!--        <form th:action="@{/product/create}" th:object="${productDto}" method="post" class="row g-3 needs-validation">-->
+
+<!--            &lt;!&ndash; Tên sản phẩm &ndash;&gt;-->
+<!--            <div class="col-md-6">-->
+<!--                <label class="form-label fw-bold">Tên sản phẩm</label>-->
+<!--                <input type="text" th:field="*{name}" class="form-control" placeholder="Nhập tên sản phẩm">-->
+<!--                <div class="text-danger mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Giá sản phẩm &ndash;&gt;-->
+<!--            <div class="col-md-6">-->
+<!--                <label class="form-label fw-bold">Giá (VNĐ)</label>-->
+<!--                <input type="number" step="0.01" th:field="*{price}" class="form-control" placeholder="Nhập giá sản phẩm">-->
+<!--                <div class="text-danger mt-1" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Mô tả &ndash;&gt;-->
+<!--            <div class="col-md-12">-->
+<!--                <label class="form-label fw-bold">Mô tả sản phẩm</label>-->
+<!--                <textarea th:field="*{describe}" class="form-control" rows="3" placeholder="Nhập mô tả"></textarea>-->
+<!--                <div class="text-danger mt-1" th:if="${#fields.hasErrors('describe')}" th:errors="*{describe}"></div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Hãng sản xuất &ndash;&gt;-->
+<!--            <div class="col-md-6">-->
+<!--                <label class="form-label fw-bold">Hãng sản xuất</label>-->
+<!--                <input type="text" th:field="*{manufacturer}" class="form-control" placeholder="Nhập hãng sản xuất">-->
+<!--                <div class="text-danger mt-1" th:if="${#fields.hasErrors('manufacturer')}" th:errors="*{manufacturer}"></div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Nút hành động &ndash;&gt;-->
+<!--            <div class="col-12 text-end mt-4">-->
+<!--                <button type="submit" class="btn btn-success px-4">Lưu</button>-->
+<!--                <a th:href="@{/product}" class="btn btn-secondary px-4">Quay lại</a>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
