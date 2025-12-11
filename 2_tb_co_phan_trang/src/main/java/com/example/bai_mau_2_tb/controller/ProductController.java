@@ -135,18 +135,18 @@ public class ProductController {
         return "redirect:/product";
     }
 
-    // ==================== 6️⃣ XÓA SẢN PHẨM ====================
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable Integer id, RedirectAttributes redirect) {
-        Product product = productService.findById(id);
-        if (product == null) {
-            redirect.addFlashAttribute("message", " Không tìm thấy sản phẩm để xóa!");
-            return "redirect:/product";
-        }
-        productService.delete(id);
-        redirect.addFlashAttribute("message", " Xóa sản phẩm thành công!");
-        return "redirect:/product";
-    }
+//    // ==================== 6️⃣ XÓA SẢN PHẨM ====================
+//    @GetMapping("/delete/{id}")
+//    public String deleteProduct(@PathVariable Integer id, RedirectAttributes redirect) {
+//        Product product = productService.findById(id);
+//        if (product == null) {
+//            redirect.addFlashAttribute("message", " Không tìm thấy sản phẩm để xóa!");
+//            return "redirect:/product";
+//        }
+//        productService.delete(id);
+//        redirect.addFlashAttribute("message", " Xóa sản phẩm thành công!");
+//        return "redirect:/product";
+//    }
 
 
     // ==================== XEM CHI TIẾT SẢN PHẨM ====================
@@ -159,6 +159,19 @@ public class ProductController {
         }
         model.addAttribute("product", product); // dùng entity để hiển thị
         return "product/detail";
+    }
+
+    // ==================== 7️⃣ XÓA NHIỀU SẢN PHẨM ====================
+    @PostMapping("/delete-all")
+    public String deleteAll(@RequestParam(required = false) List<Integer> ids,
+                            RedirectAttributes redirect) {
+        if (ids == null || ids.isEmpty()) {
+            redirect.addFlashAttribute("message", "Chưa chọn sản phẩm nào để xóa!");
+        } else {
+            productService.deleteAll(ids);
+            redirect.addFlashAttribute("message", "Đã xóa " + ids.size() + " sản phẩm thành công!");
+        }
+        return "redirect:/product";
     }
 
 }

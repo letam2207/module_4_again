@@ -1,6 +1,6 @@
-package com.example.bai_mau_2_tb.service;
+package com.example.bai_thi.service;
 
-import com.example.bai_mau_2_tb.entity.Product;
+import com.example.bai_thi.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,13 +11,11 @@ public interface IProductService {
 
     Page<Product> findByNameContaining(String name, Pageable pageable);
 
-    void save (Product product);
+    void save(Product product);
 
     Product findById(int id);
 
     List<Product> findByName(String name);
-
-    void update(Product product);
 
     void deleteAll(List<Integer> ids);
 }

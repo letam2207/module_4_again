@@ -1,7 +1,7 @@
-package com.example.bai_mau_2_tb.service;
+package com.example.bai_thi.service;
 
-import com.example.bai_mau_2_tb.entity.Product;
-import com.example.bai_mau_2_tb.repository.IProductRepository;
+import com.example.bai_thi.entity.Product;
+import com.example.bai_thi.repository.IProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,7 @@ public class ProductService implements IProductService {
     public ProductService(IProductRepository productRepository) {
         this.productRepository = productRepository;
     }
+
 
     @Override
     public Page<Product> findAll(Pageable pageable) {
@@ -41,12 +42,6 @@ public class ProductService implements IProductService {
         return productRepository.findByName(name);
     }
 
-    @Override
-    public void update(Product product) {
-        if (productRepository.existsById(product.getId())) {
-            productRepository.save(product);
-        }
-    }
 
     @Override
     public void deleteAll(List<Integer> ids) {
